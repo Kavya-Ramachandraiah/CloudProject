@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -99,11 +99,8 @@
         font-size: 14px; /* Adjusted font size */
       }
     </style>
-    <script
-      type="text/javascript"
-      src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"
-    ></script>
-    <script type="text/javascript">
+    <script th:inline="javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script th:inline="javascript">
       function sendthemail() {
         (function () {
           emailjs.init("LxjGoOKiEKDz6QNJ7");
@@ -111,7 +108,7 @@
 
         var params = {
           fullname: document.getElementById("fullName").value,
-          username: document.getElementById("username").value,
+          // username: document.getElementById("username").value,
           password: document.getElementById("password").value,
           email: document.getElementById("email").value,
         };
@@ -139,14 +136,14 @@
       <div class="text-center mb-4">
         <h2 class="animated-text">Join Cloud Kitchen</h2>
       </div>
-      <form action="/savecustomer" method="post" id="form" th:object="${customer}">
+      <form th:action="@{/signup}" method="post" id="form" th:object="${customer}">
         <div class="form-group">
             <label for="fullName" class="label-text">Full Name:</label>
             <input type="text" class="form-control" id="fullName" th:field="*{fullName}" placeholder="Full Name" required />
         </div>
         <div class="form-group">
-            <label for="phoneNumber" class="label-text">Phone Number:</label>
-            <input type="tel" class="form-control" id="phoneNumber" th:field="*{phoneNumber}" placeholder="Phone Number" required />
+            <label for="Phonenumber" class="label-text">Phone Number:</label>
+            <input type="text" class="form-control" id="Phonenumber" th:field="*{Phonenumber}" placeholder="Phone Number" required />
         </div>
         <div class="form-group">
             <label for="address" class="label-text">Address:</label>
@@ -156,19 +153,24 @@
             <label for="email" class="label-text">Email:</label>
             <input type="email" class="form-control" id="email" th:field="*{email}" placeholder="Email" required />
         </div>
-        <div class="form-group">
+        <!-- <div class="form-group">
             <label for="username" class="label-text">Username:</label>
             <input type="text" class="form-control" id="username" th:field="*{username}" placeholder="Username" required />
-        </div>
+        </div> -->
         <div class="form-group">
             <label for="password" class="label-text">Password:</label>
             <input type="password" class="form-control" id="password" th:field="*{password}" placeholder="Password" required />
         </div>
 
-        <button type="submit" class="btn btn-primary btn-block" onclick="sendthemail()">Sign Up</button>
+        <button type="submit" class="btn btn-primary btn-block" th:onclick="|sendthemail()|">Sign Up</button>
+
     </form>
+
+    <div th:if="${successMessage}" class="alert alert-success">
+      <p th:text="${successMessage}"></p>
+  </div>
       <p class="signup-link">
-        Already have an account? <a href="login">Login</a>
+        Already have an account? <a href="/login">Login</a>
       </p>
     </div>
 
