@@ -1,6 +1,7 @@
 package com.karthik.cloudkitchenapplication.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -37,30 +38,36 @@ public class CustomerController {
         return "login";
     }
 
-    @GetMapping("/getallcustomers")
-public String getAllCustomers(Model model) {
-    List<Customer> customers = userService.getAllCustomers();
-    model.addAttribute("customers", customers);
-    return "all-customers"; // This corresponds to the Thymeleaf template name
-}
+   @GetMapping("/getallcustomers")
+    public ResponseEntity<List<Customer>> getAllCustomers() {
+        List<Customer> customers = userService.getAllCustomers();
+        return ResponseEntity.ok().body(customers);
+    }
 
-@GetMapping("/getcustomerbyid/{id}")
-public String getCustomerById(@PathVariable Long id, Model model) {
-    Customer customer = userService.getCustomerById(id);
-    model.addAttribute("customer", customer);
-    return "customer-details"; // This corresponds to the Thymeleaf template name
-}
+    @GetMapping("/getcustomerbyid/{id}")
+    public ResponseEntity<Customer> getCustomerById(@PathVariable Long id) {
+        Customer customer = userService.getCustomerById(id);
+        if (customer != null) {
+            return ResponseEntity.ok().body(customer);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
-@PutMapping("/updatecustomer/{id}")
-public String updateCustomer(@PathVariable Long id, @ModelAttribute Customer user) {
-    userService.updateCustomer(id, user);
-    return "redirect:/getallcustomers"; // Redirects to the URL mapped to getAllCustomers method
-}
+    @PutMapping("/updatecustomer/{id}")
+    public ResponseEntity<Customer> updateCustomer(@PathVariable Long id, @RequestBody Customer user) {
+        Customer updatedCustomer = userService.updateCustomer(id, user);
+        if (updatedCustomer != null) {
+            return ResponseEntity.ok().body(updatedCustomer);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
-@DeleteMapping("/deletecustomer/{id}")
-public String deleteCustomer(@PathVariable Long id) {
-    userService.deleteCustomer(id);
-    return "redirect:/getallcustomers"; // Redirects to the URL mapped to getAllCustomers method
-}
+    @DeleteMapping("/deletecustomer/{id}")
+    public ResponseEntity<Void> deleteCustomer(@PathVariable Long id) {
+        userService.deleteCustomer(id);
+        return ResponseEntity.noContent().build();
+    }
 
 }
