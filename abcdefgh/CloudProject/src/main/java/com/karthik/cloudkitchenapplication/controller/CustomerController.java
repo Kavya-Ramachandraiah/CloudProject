@@ -70,4 +70,8 @@ public class CustomerController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/customer_welcome")
+    public String customer_welcome() {
+        return "customer_welcome";
+    }
 }
